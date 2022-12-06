@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd
+http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd">
+
+    <changeSet id="nik_1" author="Nikita Goloveshko">
+        <createTable tableName="owners">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" primaryKeyName="owners_id_pk" />
+            </column>
+            <column name="name" type="varchar(250)"/>
+            <column name="email" type="varchar(250)" />
+        </createTable>
+
+        <addAutoIncrement tableName="owners" columnName="id" columnDataType="bigint" startWith="1" incrementBy="1"/>
+        
+        <createTable tableName="pets">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" primaryKeyName="pets_id_pk" />
+            </column>
+            <column name="name" type="varchar(250)" />
+            <column name="age" type="int" />
+            <column name="birth_date" type="datetime" />
+            <column name="owner_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_pets_owners" references="owners(id)"/>
+            </column>
+        </createTable>
+
+        <addAutoIncrement tableName="pets" columnName="id" columnDataType="bigint" startWith="1" incrementBy="1"/>
+        
+        <createTable tableName="petsmemento">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" primaryKeyName="petsmemento_id" />
+            </column>
+            <column name="date_time_stamp" type="datetime" />
+            <column name="pet_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_petsmemento_pets" references="pets(id)"/>
+            </column>
+        </createTable>
+
+        <addAutoIncrement tableName="petsmemento" columnName="id" columnDataType="bigint" startWith="1" incrementBy="1"/>
+        
+        <createTable tableName="petstates">
+            <column name="pet_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="state" type="varchar(100)"/>
+        </createTable>
+        
+        
+    </changeSet>
+
+    <changeSet id="nik_2" author="Nikita Goloveshko">
+        <createTable tableName="users">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" primaryKeyName="users_pk"/>
+            </column>
+            <column name="username" type="varchar(250)" />
+            <column name="password" type="varchar(250)" />
+            <column name="roles" type="varchar(250)" />
+            <column name="active" type="int" />
+        </createTable>
+
+        <addAutoIncrement tableName="users" columnName="id" columnDataType="bigint" startWith="1" incrementBy="1"/>
+
+    </changeSet>
+    <changeSet id="nik-3" author="Nikita Goloveshko">
+        <addColumn tableName="owners">
+            <column name="user_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_owners_users" references="users(id)"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="nik-4" author="Nikita Goloveshko">
+        <createTable tableName="petstateinfo">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" primaryKeyName="petstateinfo_pk"/>
+            </column>
+            <column name="state" type="varchar(100)"/>
+            <column name="last_modification" type="datetime"/>
+            <column name="pet_id" type="bigint">
+                <constraints foreignKeyName="petstateinfo_pet_fk" references="pets(id)" nullable="false"/>
+            </column>
+            <column name="start" type="datetime" />
+            <column name="minutes" type="bigint" />
+            <column name="active" type="int"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="nik-5" author="Nikita Goloveshko">
+        <addAutoIncrement tableName="petstateinfo" columnName="id" columnDataType="bigint" startWith="1" incrementBy="1"/>
+    </changeSet>
+
+</databaseChangeLog>
