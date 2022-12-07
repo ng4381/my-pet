@@ -31,6 +31,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/users").permitAll()
                 .antMatchers("/owners").authenticated()
                 .antMatchers("/pets").authenticated()
+                .antMatchers(HttpMethod.POST,"/pets/states/reset/**").authenticated()
                 .and().httpBasic();
 
         http.csrf().disable();

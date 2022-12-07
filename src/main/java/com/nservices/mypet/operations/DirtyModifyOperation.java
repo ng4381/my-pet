@@ -1,6 +1,5 @@
 package com.nservices.mypet.operations;
 
-import com.nservices.mypet.dto.PetDTO;
 import com.nservices.mypet.entity.PetEntity;
 import com.nservices.mypet.entity.PetStateInfoEntity;
 import com.nservices.mypet.model.PetState;
@@ -19,15 +18,15 @@ public class DirtyModifyOperation implements IModifyOperation {
     private final PetStateInfoService petStateInfoService;
     public static final Integer DEATH_TIME_MINUTES = 1000;
     public static final Integer DIRTY_TIME_MINUTES = 5;
+
     @Override
     public void execute(PetEntity pet) {
-        log.info("DirtyModifyOperation... Pet: " + pet.getName());
 
         PetStateInfoEntity petStateInfo = petStateInfoService.getPetStateInfo(pet.getId(), PetState.DIRTY);
         long diffFromStart = ChronoUnit.MINUTES.between(petStateInfo.getStart(), LocalDateTime.now());
         long diffFromLastModification = ChronoUnit.MINUTES.between(petStateInfo.getStart(), LocalDateTime.now());
         if (diffFromStart >= DEATH_TIME_MINUTES) {
-            log.info("=== X( (" + pet.getName() + ")===");
+            log.info(String.format("[%s] DEAD", pet.getName()));
         }
 
         if (diffFromLastModification >= DIRTY_TIME_MINUTES && petStateInfo.getActive() == 0) {
@@ -35,13 +34,13 @@ public class DirtyModifyOperation implements IModifyOperation {
             petStateInfo.setLastModification(LocalDateTime.now());
             petStateInfo.setStart(LocalDateTime.now());
             petStateInfo.setMinutes(0);
-            log.info("===Became dirty (" + pet.getName() + ")===");
+            log.info(String.format("[%s] Become dirty", pet.getName()));
         }
 
         if (petStateInfo.getActive() == 1) {
             petStateInfo.setLastModification(LocalDateTime.now());
             petStateInfo.setMinutes(diffFromStart);
-            log.info("===Still dirty (" + pet.getName() + ")===");
+            log.info(String.format("[%s] Still dirty", pet.getName()));
         }
 
         petStateInfoService.savePetStateInfo(petStateInfo);
