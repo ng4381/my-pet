@@ -77,4 +77,13 @@ public class PetService {
     public List<PetEntity> getAllAlivePets() {
         return petRepository.findAll();
     }
+
+    public void resetState(String username, String state) {
+        PetEntity pet = getPet(username);
+        PetStateInfoEntity petStateInfo = petStateInfoService.getPetStateInfo(pet.getId(), PetState.valueOf(state.toUpperCase()));
+        petStateInfo.setActive(0);
+        petStateInfo.setLastModification(LocalDateTime.now());
+        petStateInfo.setStart(LocalDateTime.now());
+        petStateInfoService.savePetStateInfo(petStateInfo);
+    }
 }
