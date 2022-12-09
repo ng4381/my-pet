@@ -14,14 +14,14 @@ public class OwnerService {
 
     private final OwnerRepository ownerRepository;
     private final UserService userService;
-    public void saveOwner(OwnerDTO ownerDTO, String username) {
+    public OwnerEntity saveOwner(OwnerDTO ownerDTO, String username) {
         // One User one Owner
         if(getOwner(username) != null) {
             throw new UserAlreadyHasAnOwnerException("Only one user per owner. User(" + username + ") already has an owner");
         }
         User user = userService.getUserByUsername(username);
         OwnerEntity owner = new OwnerEntity(ownerDTO.getName(), ownerDTO.getEmail(), user);
-        ownerRepository.save(owner);
+        return ownerRepository.save(owner);
     }
 
     public OwnerEntity getOwner(String username) {

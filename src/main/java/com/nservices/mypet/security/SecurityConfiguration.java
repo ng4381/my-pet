@@ -29,10 +29,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/users").permitAll()
+                .antMatchers(HttpMethod.POST, "/registry").permitAll()
                 .antMatchers("/owners").authenticated()
-                .antMatchers("/pets").authenticated()
+                .antMatchers("/pets/**").authenticated()
                 .antMatchers(HttpMethod.POST,"/pets/states/reset/**").authenticated()
-                .and().httpBasic();
+                .and().cors().and().httpBasic();
 
         http.csrf().disable();
     }

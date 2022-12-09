@@ -1,10 +1,12 @@
 package com.nservices.mypet.jpa;
 
+import com.nservices.mypet.dto.RegistryInfoDTO;
 import com.nservices.mypet.entity.*;
 import com.nservices.mypet.model.PetState;
 import com.nservices.mypet.repository.*;
 import com.nservices.mypet.security.RoleConstants;
 import com.nservices.mypet.service.PetService;
+import com.nservices.mypet.service.RegistryService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -38,6 +40,9 @@ public class JpaTest {
     private PetStateInfoRepository petStateInfoRepository;
 
     private User user, user2;
+
+    //@Autowired
+    //private RegistryService registryService;
 
     @BeforeEach
     public void init() {
@@ -149,5 +154,7 @@ public class JpaTest {
         Assertions.assertThat(petStateInfoRepository.findByPetIdAndState(petStateInfo.getId(), PetState.HUNGRY))
                 .isNotNull();
     }
+
+
 
 }

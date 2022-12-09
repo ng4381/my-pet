@@ -25,8 +25,14 @@ public class SickModifyOperation implements IModifyOperation {
         PetStateInfoEntity petStateInfo = petStateInfoService.getPetStateInfo(pet.getId(), PetState.SICK);
         long diffFromStart = ChronoUnit.MINUTES.between(petStateInfo.getStart(), LocalDateTime.now());
         long diffFromLastModification = ChronoUnit.MINUTES.between(petStateInfo.getStart(), LocalDateTime.now());
-        if (diffFromStart >= DEATH_TIME_MINUTES) {
+        if (diffFromStart >= DEATH_TIME_MINUTES && petStateInfo.getActive() == 1) {
             log.info(String.format("[%s] DEAD", pet.getName()));
+        }
+
+        if (petStateInfo.getActive() == 1) {
+            petStateInfo.setLastModification(LocalDateTime.now());
+            petStateInfo.setMinutes(diffFromStart);
+            log.info(String.format("[%s] Still sick", pet.getName()));
         }
 
         boolean isSick = Math.random() * 100 > 100 - CHANCE_TO_SICK;
@@ -39,13 +45,6 @@ public class SickModifyOperation implements IModifyOperation {
             log.info(String.format("[%s] Become sick", pet.getName()));
         }
 
-        if (petStateInfo.getActive() == 1) {
-            petStateInfo.setLastModification(LocalDateTime.now());
-            petStateInfo.setMinutes(diffFromStart);
-            log.info(String.format("[%s] Still sick", pet.getName()));
-        }
-
         petStateInfoService.savePetStateInfo(petStateInfo);
-
     }
 }

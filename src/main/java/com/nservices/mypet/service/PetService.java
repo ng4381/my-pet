@@ -42,21 +42,23 @@ public class PetService {
         PetEntity pet = new PetEntity(petDTO.getName(), age, petDTO.getBirthDate(), owner);
         petRepository.save(pet);
 
+        LocalDateTime petBirthday = petDTO.getBirthDate();
+
         // 3. Add state OK
-        PetStatesMementoEntity petStatesMemento = new PetStatesMementoEntity(pet, List.of(), LocalDateTime.now());
+        PetStatesMementoEntity petStatesMemento = new PetStatesMementoEntity(pet, List.of(), petBirthday);
         petStatesMementoService.savePetStatesMemento(petStatesMemento);
 
         // 4. Add pet state info
-        PetStateInfoEntity petStateInfoHungry = new PetStateInfoEntity(pet, PetState.HUNGRY, LocalDateTime.now(), LocalDateTime.now(), 0, 0);
+        PetStateInfoEntity petStateInfoHungry = new PetStateInfoEntity(pet, PetState.HUNGRY, petBirthday, petBirthday, 0, 0);
         petStateInfoService.savePetStateInfo(petStateInfoHungry);
 
-        PetStateInfoEntity petStateInfoSick = new PetStateInfoEntity(pet, PetState.SICK, LocalDateTime.now(), LocalDateTime.now(), 0, 0);
+        PetStateInfoEntity petStateInfoSick = new PetStateInfoEntity(pet, PetState.SICK, petBirthday, petBirthday, 0, 0);
         petStateInfoService.savePetStateInfo(petStateInfoSick);
 
-        PetStateInfoEntity petStateInfoBored = new PetStateInfoEntity(pet, PetState.BORED, LocalDateTime.now(), LocalDateTime.now(), 0, 0);
+        PetStateInfoEntity petStateInfoBored = new PetStateInfoEntity(pet, PetState.BORED, petBirthday, petBirthday, 0, 0);
         petStateInfoService.savePetStateInfo(petStateInfoBored);
 
-        PetStateInfoEntity petStateInfoDirty = new PetStateInfoEntity(pet, PetState.DIRTY, LocalDateTime.now(), LocalDateTime.now(), 0, 0);
+        PetStateInfoEntity petStateInfoDirty = new PetStateInfoEntity(pet, PetState.DIRTY, petBirthday, petBirthday, 0, 0);
         petStateInfoService.savePetStateInfo(petStateInfoDirty);
 
 
@@ -84,6 +86,8 @@ public class PetService {
         petStateInfo.setActive(0);
         petStateInfo.setLastModification(LocalDateTime.now());
         petStateInfo.setStart(LocalDateTime.now());
+        petStateInfo.setMinutes(0);
+        petStateInfo.setStart(LocalDateTime.of(0,1,1,0,0));
         petStateInfoService.savePetStateInfo(petStateInfo);
     }
 }
