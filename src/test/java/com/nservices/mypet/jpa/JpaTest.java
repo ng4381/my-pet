@@ -155,6 +155,11 @@ public class JpaTest {
                 .isNotNull();
     }
 
+    @Test
+    public void testfindByUsernameAndPassword() {
+        userRepository.save(user);
+        userRepository.save(user2);
 
-
+        Assertions.assertThat(userRepository.findByUsernameAndPassword(user.getUsername(), user.getPassword())).isNotNull();
+    }
 }

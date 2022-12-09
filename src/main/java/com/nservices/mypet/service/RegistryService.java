@@ -24,8 +24,8 @@ public class RegistryService {
 
     @Transactional
     public void registerPetAndUser(RegistryInfoDTO regInfo) {
-        User user = userService.saveUser(new UserDto(regInfo.getUsername(), regInfo.getPassword()));
-        OwnerEntity owner = ownerService.saveOwner(new OwnerDTO(0L, regInfo.getOwnerName(), regInfo.getEmail()), user.getUsername());
-        petService.savePet(new PetDTO(0L, regInfo.getPetName(), 0, LocalDateTime.now()), user.getUsername());
+        UserDto userDto = userService.saveUser(new UserDto(regInfo.getUsername(), regInfo.getPassword()));
+        OwnerEntity owner = ownerService.saveOwner(new OwnerDTO(0L, regInfo.getOwnerName(), regInfo.getEmail()), userDto.getUsername());
+        petService.savePet(new PetDTO(0L, regInfo.getPetName(), 0, LocalDateTime.now()), userDto.getUsername());
     }
 }

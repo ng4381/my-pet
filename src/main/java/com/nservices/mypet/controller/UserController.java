@@ -6,6 +6,8 @@ import com.nservices.mypet.service.UserService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -19,14 +21,14 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    public void createUser(@RequestBody UserDto userDto) {
+    public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto) {
         log.info("[NIK]Creating user " + userDto.getUsername() + "...");
-        userService.saveUser(userDto);
+        return ResponseEntity.ok(userService.saveUser(userDto));
     }
 
     @GetMapping
-    public User getUsers(Principal principal) {
-        log.info("Current user is " + principal.getName());
-        return userService.getUserByUsername("User1");
+    public ResponseEntity<HttpStatus> getUser(Principal principal) {
+        log.info("Credentials: " + principal.getName());
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

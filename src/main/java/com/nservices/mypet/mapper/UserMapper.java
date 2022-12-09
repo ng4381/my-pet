@@ -27,6 +27,6 @@ public class UserMapper implements IDtoMapper<UserDto, User>{
 
     @Override
     public UserDto EntityToObject(User user) {
-        return null;
+        return new UserDto(user.getUsername(), user.getPassword());
     }
 }
