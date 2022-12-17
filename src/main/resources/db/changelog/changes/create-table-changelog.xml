@@ -95,4 +95,25 @@ http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibas
         <addAutoIncrement tableName="petstateinfo" columnName="id" columnDataType="bigint" startWith="1" incrementBy="1"/>
     </changeSet>
 
+    <changeSet id="nik-6" author="Nikita Goloveshko">
+        <createTable tableName="friends">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" primaryKeyName="friends_pk"/>
+            </column>
+            <column name="user_id" type="bigint">
+                <constraints foreignKeyName="friends_user_fk" references="users(id)" nullable="false"/>
+            </column>
+            <column name="confirmed" type="int"/>
+        </createTable>
+        <addAutoIncrement tableName="friends" columnName="id" columnDataType="bigint" startWith="1" incrementBy="1"/>
+    </changeSet>
+
+    <changeSet id="nik-7" author="Nikita Goloveshko">
+        <addColumn tableName="friends">
+            <column name="friend_id" type="bigint">
+                <constraints foreignKeyName="friends_user_friend_fk" references="users(id)" nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>
