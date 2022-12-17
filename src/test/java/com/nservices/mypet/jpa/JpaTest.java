@@ -140,22 +140,6 @@ public class JpaTest {
     }
 
     @Test
-    public void testfindByPetIdAndState() {
-        userRepository.save(user);
-        OwnerEntity owner = new OwnerEntity("nik_owner", "nik@gmail.com", user);
-        ownerRepository.save(owner);
-        PetEntity pet = new PetEntity("pet-1", 0, LocalDateTime.now(), owner);
-        petRepository.save(pet);
-
-        PetStateInfoEntity petStateInfo = new PetStateInfoEntity(pet, PetState.HUNGRY, LocalDateTime.now(), LocalDateTime.now(), 0, 1);
-
-        petStateInfoRepository.save(petStateInfo);
-
-        Assertions.assertThat(petStateInfoRepository.findByPetIdAndState(petStateInfo.getId(), PetState.HUNGRY))
-                .isNotNull();
-    }
-
-    @Test
     public void testfindByUsernameAndPassword() {
         userRepository.save(user);
         userRepository.save(user2);
