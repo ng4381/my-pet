@@ -1,12 +1,9 @@
 package com.nservices.mypet.jpa;
 
-import com.nservices.mypet.dto.RegistryInfoDTO;
 import com.nservices.mypet.entity.*;
 import com.nservices.mypet.model.PetState;
 import com.nservices.mypet.repository.*;
-import com.nservices.mypet.security.RoleConstants;
-import com.nservices.mypet.service.PetService;
-import com.nservices.mypet.service.RegistryService;
+import com.nservices.mypet.repository.security.RoleConstants;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

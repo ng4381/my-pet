@@ -1,4 +1,4 @@
-package com.nservices.mypet.security;
+package com.nservices.mypet.repository.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

@@ -9,7 +9,7 @@ import com.nservices.mypet.repository.OwnerRepository;
 import com.nservices.mypet.repository.PetRepository;
 import com.nservices.mypet.repository.PetStateInfoRepository;
 import com.nservices.mypet.repository.UserRepository;
-import com.nservices.mypet.security.RoleConstants;
+import com.nservices.mypet.repository.security.RoleConstants;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

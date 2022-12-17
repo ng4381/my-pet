@@ -1,0 +1,8 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/mypetdbnew
+    username: postgres
+    password: aaa111
+
+myvar:
+  profilename: NIK_DEV

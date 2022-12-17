@@ -1,4 +1,4 @@
-package com.nservices.mypet.security;
+package com.nservices.mypet.repository.security;
 
 import com.nservices.mypet.entity.User;
 import lombok.RequiredArgsConstructor;

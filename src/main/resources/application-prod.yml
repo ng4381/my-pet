@@ -1,0 +1,9 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://db:5432/sample
+    username: sample
+    password: sample
+
+
+myvar:
+  profilename: NIK_PROD
