@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class DbInit implements CommandLineRunner {
 
-    @Value("${myvar.profilename}")
+    //@Value("${myvar.profilename}")
     private String profilename;
 
 

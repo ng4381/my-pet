@@ -1,54 +1,47 @@
 package com.nservices.mypet.service;
 
-import com.nservices.mypet.dto.FriendDto;
+import com.nservices.mypet.dto.UserDto;
 import com.nservices.mypet.entity.FriendEntity;
 import com.nservices.mypet.entity.User;
-import com.nservices.mypet.mapper.FriendMapper;
-import com.nservices.mypet.repository.FriendRepository;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.List;
 
-import static com.nservices.mypet.repository.security.RoleConstants.ROLE_USER;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.verify;
+import static com.nservices.mypet.util.Constants.*;
 
-@ExtendWith(MockitoExtension.class)
+
+@SpringBootTest
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class FriendsServiceTest {
-    @Mock
-    private FriendRepository friendRepository;
 
-    @Mock
-    private UserService userService;
-
-    @InjectMocks
+    @Autowired
     private FriendService friendService;
 
+    @Autowired
+    private UserService userService;
 
-    @Mock
-    private FriendMapper friendMapper;
+    @BeforeEach
+    private void init() {
 
-    private final String USER1_NAME = "USER_1";
-    private final String USER1_PASSWORD = "password";
-
-    private final String USER2_NAME = "USER_2";
-    private final String USER2_PASSWORD = "password";
+    }
 
     @Test
     public void shouldSaveUnconfirmedFriend() {
-        given(friendRepository.save(any(FriendEntity.class))).willReturn(any(FriendEntity.class));
-        friendService.addUnconfirmedFriend(USER1_NAME, USER2_NAME);
-        verify(friendRepository).save(any(FriendEntity.class));
+
+        addUnconfirmedFriend();
+
+        List<FriendEntity> user1_friends = friendService.getUserFriendsByUsername(USER1_NAME);
+        Assertions.assertThat(user1_friends).filteredOn("user.username", USER1_NAME).filteredOn("friend.username", USER2_NAME).hasSize(1);
     }
 
     @Test
     public void shouldReturnAllFriends() {
+        /*
         User user1 = new User("USER_1", "", 1, ROLE_USER);
         User user2 = new User("USER_2", "", 1, ROLE_USER);
         User user3 = new User("USER_3", "", 1, ROLE_USER);
@@ -70,5 +63,60 @@ class FriendsServiceTest {
                 .hasSize(2);
 
 
+         */
+        Assertions.fail("not implemented");
     }
+
+    @Test
+    public void throwsExceptionIfFriendAlreadyAdded() {
+        addUnconfirmedFriend();
+        Assertions.assertThatThrownBy(() -> friendService.addUnconfirmedFriend(USER2_NAME, USER1_NAME));
+    }
+
+    @Test
+    public void shouldDeleteConfirmedFriend() {
+        addAndConfirmUser();
+        friendService.deleteFriendByUserUsernameFriendUsername(USER1_NAME, USER2_NAME);
+        FriendEntity friend1 = friendService.getFriendByUserAndFriend(USER1_NAME, USER2_NAME);
+        FriendEntity friend2 = friendService.getFriendByUserAndFriend(USER2_NAME, USER1_NAME);
+
+        Assertions.assertThat(friend1).isNull();
+        Assertions.assertThat(friend2).isNull();
+    }
+
+    @Test
+    public void shouldDeleteUnconfirmedFriend() {
+        addUnconfirmedFriend();
+        friendService.deleteFriendByUserUsernameFriendUsername(USER1_NAME, USER2_NAME);
+        FriendEntity friend1 = friendService.getFriendByUserAndFriend(USER1_NAME, USER2_NAME);
+        FriendEntity friend2 = friendService.getFriendByUserAndFriend(USER2_NAME, USER1_NAME);
+
+        Assertions.assertThat(friend1).isNull();
+        Assertions.assertThat(friend2).isNull();
+    }
+
+    @Test
+    public void shouldConfirmFriend() {
+        addAndConfirmUser();
+
+        List<FriendEntity> user1_friends = friendService.getUserFriendsByUsername(USER1_NAME);
+        List<FriendEntity> user2_friends = friendService.getUserFriendsByUsername(USER2_NAME);
+
+        Assertions.assertThat(user1_friends).filteredOn("user.username", USER1_NAME).filteredOn("friend.username", USER2_NAME).hasSize(1);
+        Assertions.assertThat(user2_friends).filteredOn("user.username", USER2_NAME).filteredOn("friend.username", USER1_NAME).hasSize(1);
+    }
+
+    private void addUnconfirmedFriend() {
+        userService.saveUser(new UserDto(USER1_NAME, USER1_PASSWORD));
+        userService.saveUser(new UserDto(USER2_NAME, USER2_PASSWORD));
+        friendService.addUnconfirmedFriend(USER2_NAME, USER1_NAME);
+    }
+
+
+    private void addAndConfirmUser() {
+        addUnconfirmedFriend();
+        friendService.confirmFriend(USER2_NAME, USER1_NAME);
+    }
+
+
 }

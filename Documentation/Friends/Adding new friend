@@ -1,0 +1,37 @@
+ADDING A NEW FRIEND
+
+    1. How to add a friend
+    2. How to confirm a friend
+
+
+===================================================================
+    1. How to add a friend
+===================================================================
+
+    1. Make a POST request "friends/{username}". In this example "friend/user1"
+    2. In the table "friend" will  be created a new record
+
+    -----------------------------------
+    user    |    friend    |    confirm
+    -----------------------------------
+    user1   |    user2     |      0
+
+    0 - means that this friend is not confirmed
+
+===================================================================
+    2. How to confirm a friend
+===================================================================
+
+    1. Make a POST request "friends/confirm/{username}  /* username - friend name to confirm) */
+    2. In the table "friends" will be created a new record and updated the "confirm" status to 1
+
+    -----------------------------------
+    user    |    friend    |    confirm
+    -----------------------------------
+    user1   |    user2     |      1
+    user2   |    user1     |      1
+
+    1 - means that this friend is confirmed
+
+    In this table we've created a new record where user = friend_to_confirm; friend = authenticated_user;
+    After that both friend and current user will have each over as a friends

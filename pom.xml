@@ -33,6 +33,12 @@
                 <activatedProperties>prod</activatedProperties>
             </properties>
         </profile>
+        <profile>
+            <id>mytest</id>
+            <properties>
+                <activatedProperties>mytest</activatedProperties>
+            </properties>
+        </profile>
     </profiles>
     <dependencies>
         <dependency>

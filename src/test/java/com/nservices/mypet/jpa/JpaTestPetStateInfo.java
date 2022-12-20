@@ -51,8 +51,7 @@ public class JpaTestPetStateInfo {
                 new PetStateInfoEntity(pet, PetState.HUNGRY, LocalDateTime.now(), LocalDateTime.now(), 0, 1)
         );
 
-
-        Assertions.assertThat(petStateInfoRepository.findByPetIdAndState(petStateInfo.getId(), PetState.HUNGRY))
+        Assertions.assertThat(petStateInfoRepository.findByPetIdAndState(pet.getId(), PetState.HUNGRY))
                 .isNotNull();
     }
 }

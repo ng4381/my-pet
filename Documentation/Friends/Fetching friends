@@ -1,0 +1,26 @@
+FETCHING FRIENDS
+
+    1. Make a GET request "friends"
+    2. DTO will be returned
+        ------------ ------------ ------------ ------------ ------------------ ---------------- ------------- --------------------
+           friend   |   status   |  pet_name  |   pet_age  | friendship_score | personal_score | total_score | pet_states (array)
+        ------------ ------------ ------------ ------------ ------------------ ---------------- ------------- --------------------
+
+           user2    | confirmed  |   umka     |     10     |      1 000       |      1 300     |   2 300     |   Dirty, Hungry
+
+           user3    |unconfirmed |   umka     |     10     |       600        |      500       |    900      |       (null)
+
+           user4    |   waiting  |  (null)    |   (null)   |       (null)     |      (null)    |   (null)    |       (null)
+
+
+    We have 3 friend status:
+        - confirmed
+        - Unconfirmed_friend_request     - we didn't confirmed this friend
+        - waiting_friend_confirmation    - we will wait while the friend confirms our request
+
+
+    a) Confirmed and waiting_confirmation friends goes from table "friends". (select * from friends where user = :current_user)
+        - If confirm = 0 then    status = waiting_friend_confirmation
+        - If confirm = 1 then    status = confirmed
+
+    b) Unconfirmed_friend_request status goes from table "friends". (select * from friends where friend = :current_user and confirm = 0)
