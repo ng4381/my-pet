@@ -94,7 +94,10 @@ include::{snippets}/shouldReturnAllFriends/http-response.adoc[]
 
 == Log module
 
-Each OWNER has a log which stores information about current updates.
+Each OWNER has a log which stores information about current updates (states, friends request e.t.c.).
+
+TIP: LogEntity saveLog(String username, String message)
+
 
 == Score module
 
