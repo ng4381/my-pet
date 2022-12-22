@@ -96,6 +96,11 @@ include::{snippets}/shouldReturnAllFriends/http-response.adoc[]
 
 Each OWNER has a log which stores information about current updates (states, friends request e.t.c.).
 
+.request
+include::{snippets}/shouldReturnAllLogsByUsername/http-request.adoc[]
+.response
+include::{snippets}/shouldReturnAllLogsByUsername/http-response.adoc[]
+
 TIP: LogEntity saveLog(String username, String message)
 
 
