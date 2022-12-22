@@ -29,20 +29,10 @@ class PetServiceTest {
     @Test
     @DisplayName("when pet states memento repository fails then transaction rolls back")
     public void testSavePetTransactionRollBack() {
-        //Mockito.when(petStatesMementoService.savePetStatesMemento(Mockito.any())).thenThrow(RuntimeException.class);
         Mockito.when(ownerService.getOwner(Mockito.anyString())).thenThrow(RuntimeException.class);
         Assertions.assertThatThrownBy(() ->
                 petService.savePet(new PetDTO(1L, "owner", 15, LocalDateTime.now()), "nik"));
     }
 
-    @Test
-    public void testCalculateAgeMethod() {
-        /*
-        PetService ps = new PetService(null, null);
-        int age = ps.calculateAge(LocalDateTime.of(2020, 1, 1, 0, 0));
-        log.info("age = " + age);
-        Assertions.assertThat(age).isNotZero();
-         */
-    }
 
 }

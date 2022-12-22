@@ -38,9 +38,6 @@ public class JpaTest {
 
     private User user, user2;
 
-    //@Autowired
-    //private RegistryService registryService;
-
     @BeforeEach
     public void init() {
         user = new User("nik", "1", 1, RoleConstants.ROLE_USER);

@@ -10,8 +10,7 @@ import java.util.List;
 
 @Repository
 public interface FriendRepository extends JpaRepository<FriendEntity, Long> {
-    String USER_FRIENDS_TO_IFRIEND_DTO = "SELECT " +
-            "f.friend.username as friendUsername, " +
+    String USER_FRIENDS_TO_IFRIEND_DTO =
             "f.confirmed as status, " +
             "p.name as petName, " +
             "p.age as petAge, " +
@@ -22,13 +21,21 @@ public interface FriendRepository extends JpaRepository<FriendEntity, Long> {
             "LEFT JOIN OwnerEntity o ON f.friend.id = o.user.id " +
             "LEFT JOIN PetEntity p ON p.owner.id = o.id";
 
+    String USER_FRIENDS_TO_IFRIEND_DTO_CONFIRMED_AND_WAITING_CONFIRMATION = "SELECT " +
+            "f.friend.username as friendUsername, " +
+            USER_FRIENDS_TO_IFRIEND_DTO;
+
+    String USER_FRIENDS_TO_IFRIEND_DTO_UNCONFIRMED_FRIEND_REQUEST = "SELECT " +
+            "f.user.username as friendUsername, " +
+            USER_FRIENDS_TO_IFRIEND_DTO;
+
     List<FriendEntity> findAllByUserUsername(String username);
 
     FriendEntity findFriendByUserUsernameAndFriendUsername(String username, String friend_username);
 
-    @Query(value = USER_FRIENDS_TO_IFRIEND_DTO + " WHERE f.user.username = :username")
+    @Query(value = USER_FRIENDS_TO_IFRIEND_DTO_CONFIRMED_AND_WAITING_CONFIRMATION + " WHERE f.user.username = :username")
     List<IFriendDto> findAllFriendsWithStatusConfirmedAndWaitingConfirmation(String username);
 
-    @Query(value = USER_FRIENDS_TO_IFRIEND_DTO + " WHERE f.friend.username = :username AND f.confirmed = 0")
+    @Query(value = USER_FRIENDS_TO_IFRIEND_DTO_UNCONFIRMED_FRIEND_REQUEST + " WHERE f.friend.username = :username AND f.confirmed = 0")
     List<IFriendDto> findAllFriendsWithStatusUnconfirmedFriendRequest(String username);
 }

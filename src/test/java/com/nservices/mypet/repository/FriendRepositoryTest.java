@@ -11,16 +11,18 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.annotation.DirtiesContext;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.nservices.mypet.repository.security.RoleConstants.ROLE_USER;
-import static com.nservices.mypet.util.Constants.*;
+import static com.nservices.mypet.util.TestConstants.*;
 
 
 @DataJpaTest
 @Slf4j
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 class FriendRepositoryTest {
     @Autowired
     private FriendRepository friendRepository;
@@ -34,16 +36,19 @@ class FriendRepositoryTest {
     @Autowired
     private OwnerRepository ownerRepository;
 
-    private User user1, user2, user3;
-    private FriendEntity friend1, friend2;
+    private User user1, user2, user3, user4;
+    private FriendEntity friend1, friend2, friend4_1;
 
     @BeforeEach
     private void init() {
         user1 = userRepository.save(new User(USER1_NAME, USER1_PASSWORD, 1, ROLE_USER));
         user2 = userRepository.save(new User(USER2_NAME, USER2_PASSWORD, 1, ROLE_USER));
         user3 = userRepository.save(new User(USER3_NAME, USER3_PASSWORD, 1, ROLE_USER));
+        user4 = userRepository.save(new User(USER4_NAME, USER4_PASSWORD, 1, ROLE_USER));
+
         friend1 = friendRepository.save(new FriendEntity(user1, user2, 0));
         friend2 = friendRepository.save(new FriendEntity(user1, user3, 0));
+        friend4_1 = friendRepository.save(new FriendEntity(user4, user1, 0));
 
         OwnerEntity owner1 = new OwnerEntity(OWNER1_NAME, EMAIL1, user1);
         ownerRepository.save(owner1);
@@ -59,6 +64,11 @@ class FriendRepositoryTest {
         ownerRepository.save(owner3);
         PetEntity pet3 = petRepository.save(new PetEntity(PET3_NAME, PET3_AGE, LocalDateTime.now(), owner3));
         petRepository.save(pet3);
+
+        OwnerEntity owner4 = new OwnerEntity(OWNER4_NAME, EMAIL4, user4);
+        ownerRepository.save(owner4);
+        PetEntity pet4 = petRepository.save(new PetEntity(PET4_NAME, PET4_AGE, LocalDateTime.now(), owner4));
+        petRepository.save(pet4);
     }
 
     @Test
@@ -93,7 +103,7 @@ class FriendRepositoryTest {
     @Test
     public void shouldReturnFriendsWithStatusUnconfirmedFriendRequest() {
         List<IFriendDto> friends = friendRepository.findAllFriendsWithStatusUnconfirmedFriendRequest(USER1_NAME);
-        Assertions.assertThat(friends).filteredOn("friendUsername", USER2_NAME).isNotEmpty();
+        Assertions.assertThat(friends).filteredOn("friendUsername", USER4_NAME).isNotEmpty();
         friends.forEach(iFriendDto -> System.out.println(getFriendDtoDescription(iFriendDto)));
     }
 

@@ -1,6 +1,6 @@
 package com.nservices.mypet.util;
 
-public class Constants {
+public class TestConstants {
     public static final String USER1_NAME = "USER_1";
     public static final String USER1_PASSWORD = "password";
     public static final String OWNER1_NAME = "OWNER_1";
@@ -21,4 +21,12 @@ public class Constants {
     public static final String PET3_NAME = "PET_3";
     public static final String EMAIL3 = "EMAIL_3@gmail.com";
     public static final Integer PET3_AGE = 6;
+
+
+    public static final String USER4_NAME = "USER_4";
+    public static final String USER4_PASSWORD = "password";
+    public static final String OWNER4_NAME = "OWNER_4";
+    public static final String PET4_NAME = "PET_4";
+    public static final String EMAIL4 = "EMAIL_4@gmail.com";
+    public static final Integer PET4_AGE = 8;
 }

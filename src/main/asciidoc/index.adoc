@@ -1,0 +1,117 @@
+= Documentation for "My Pet" application
+:toc:
+
+== Friends module
+
+=== How to add a friend
+
+==== How to make request for a friendship
+
+. Make a POST request "friends/{username}". In this example "friend/user1"
+. In the table "friend" will  be created a new record
+
+.Friends entity
+|===
+|User | Friend| Confirm
+|user1 | user2 | 0
+|===
+
+NOTE: 0 - means that this friend is not confirmed
+
+.request
+include::{snippets}/shouldAddUnconfirmedFriend/http-request.adoc[]
+.response
+include::{snippets}/shouldAddUnconfirmedFriend/http-response.adoc[]
+
+
+==== How to confirm a friend
+
+. Make a POST request "friends/confirm/{username} Where username - *_friend_* username to confirm
+
+. In the table "friends" will be created a new record and updated the "confirm" status to 1
+
+|===
+|User | Friend| Confirm
+|user1 | user2 | 1
+|user2 | user1 | 1
+|===
+
+
+NOTE: 1 - means that this friend is confirmed
+
+TIP: In this table we've created a new record where user = friend_to_confirm; friend = authenticated_user;
+After that both friend and current user will have each over as a friends
+
+
+.request
+include::{snippets}/shouldConfirmAFriend/http-request.adoc[]
+.response
+include::{snippets}/shouldConfirmAFriend/http-response.adoc[]
+
+
+=== How to delete a friend
+
+.request
+include::{snippets}/shouldDeleteFriend/http-request.adoc[]
+.response
+include::{snippets}/shouldDeleteFriend/http-response.adoc[]
+
+
+=== How to fetch all friends (DTO)
+
+. Make a GET request "friends"
+. DTO will be returned
+
+|===
+|friend   |   status   |  pet_name  |   pet_age  | friendship_score | personal_score | total_score | pet_states (array)
+|user2    | confirmed  |   umka     |     10     |      1 000       |      1 300     |   2 300     |   Dirty, Hungry
+|user3    |unconfirmed |   umka     |     10     |       600        |      500       |    900      |       (null)
+|user4    |   waiting  |  (null)    |   (null)   |       (null)     |      (null)    |   (null)    |       (null)
+|===
+
+We have 3 friend status:
+
+. CONFIRMED
+. UNCONFIRMED_FRIEND_REQUEST     - we didn't confirmed this friend
+. WAITING_FRIEND_CONFIRMATION    - we will wait while the friend confirms our request
+
+[NOTE]
+====
+CONFIRMED and WAITING_CONFIRMATION friends goes from table "friends". (select * from friends where user = :current_user)
+
+. If confirm = 0 then    status = WAITING_FRIEND_CONFIRMATION
+. If confirm = 1 then    status = CONFIRMED
+
+UNCONFIRMED_FRIEND_REQUEST status goes from table "friends". (select * from friends where friend = :current_user and confirm = 0)
+====
+
+.request
+include::{snippets}/shouldReturnAllFriends/http-request.adoc[]
+.response
+include::{snippets}/shouldReturnAllFriends/http-response.adoc[]
+
+
+
+== Log module
+
+Each OWNER has a log which stores information about current updates.
+
+== Score module
+
+FRIENDSHIP_SCORE + PERSONAL_SCORE = TOTAL_SCORE
+
+FRIENDSHIP_SCORES increments in the case you help your friend to change a state of your pet
+
+PERSONAL_SCORE increments when you change a state of your pet
+
+== Pet states module
+
+The pet can have four states:
+
+. BORED
+. DIRTY
+. HUNGRY
+. SICK
+
+Each state can be changed by user or by a friend.
+Program randomly chooses which state can be changed by the user or by a friend.
