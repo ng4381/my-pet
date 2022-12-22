@@ -116,4 +116,17 @@ http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibas
         </addColumn>
     </changeSet>
 
+    <changeSet id="nik-8" author="Nikita Goloveshko">
+        <createTable tableName="logs">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" primaryKeyName="log_pk"/>
+            </column>
+            <column name="message" type="varchar(250)"/>
+            <column name="owner_id" type="bigint">
+                <constraints foreignKeyName="log_owner_fk" references="owners(id)" nullable="false"/>
+            </column>
+        </createTable>
+        <addAutoIncrement tableName="logs" columnName="id" columnDataType="bigint" startWith="1" incrementBy="1"/>
+    </changeSet>
+
 </databaseChangeLog>
