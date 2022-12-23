@@ -14,5 +14,5 @@ public class PetStateInfoDTO {
     private int PetAge;
     private String state;
     private long minutes;
-
+    private int friendOnly;
 }

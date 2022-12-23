@@ -112,9 +112,4 @@ public class FriendsControllerTest {
         verify(friendsService).deleteFriendByUserUsernameFriendUsername(anyString(), anyString());
     }
 
-
-    @Test
-    void resetFriendsPetState() {
-        Assertions.fail("not implemented");
-    }
 }
