@@ -1,5 +1,6 @@
 package com.nservices.mypet.entity;
 
+import com.mchange.v1.xmlprops.SaxXmlPropsParser;
 import lombok.*;
 
 import javax.persistence.*;
@@ -8,6 +9,8 @@ import javax.validation.constraints.Email;
 @Getter
 @Setter
 @Entity
+@Builder
+@AllArgsConstructor
 @Table(name = "owners")
 @NoArgsConstructor
 public class OwnerEntity {
@@ -27,6 +30,8 @@ public class OwnerEntity {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
+    @Embedded
+    private Score score;
 
     public OwnerEntity(String name, String email, User user) {
         this.name = name;

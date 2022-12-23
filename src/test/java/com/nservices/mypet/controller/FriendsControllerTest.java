@@ -2,6 +2,7 @@ package com.nservices.mypet.controller;
 
 import com.nservices.mypet.dto.FriendDto;
 import com.nservices.mypet.service.FriendService;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -112,4 +113,8 @@ public class FriendsControllerTest {
     }
 
 
+    @Test
+    void resetFriendsPetState() {
+        Assertions.fail("not implemented");
+    }
 }
