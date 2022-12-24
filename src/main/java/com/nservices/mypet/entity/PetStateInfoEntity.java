@@ -38,6 +38,9 @@ public class PetStateInfoEntity {
     @Column(name = "active")
     private int active;
 
+    @Column(name = "only_friend")
+    private int friendOnly;
+
     public PetStateInfoEntity(PetEntity pet, PetState state, LocalDateTime lastModification, LocalDateTime start, int minutes, int active) {
         this.pet = pet;
         this.state = state;

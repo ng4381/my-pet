@@ -40,6 +40,7 @@ public class BoredModifyOperation implements IModifyOperation {
             petStateInfo.setLastModification(LocalDateTime.now());
             petStateInfo.setStart(LocalDateTime.now());
             petStateInfo.setMinutes(0);
+            petStateInfo.setFriendOnly(1); // TODO just for testing purpose always friend only
             log.info(String.format("[%s] Become bored", pet.getName()));
         }
 

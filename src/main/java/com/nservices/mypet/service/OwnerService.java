@@ -24,6 +24,10 @@ public class OwnerService {
         return ownerRepository.save(owner);
     }
 
+    public OwnerEntity save(OwnerEntity owner) {
+        return ownerRepository.save(owner);
+    }
+
     public OwnerEntity getOwner(String username) {
         return ownerRepository.findByUsername(username);
     }

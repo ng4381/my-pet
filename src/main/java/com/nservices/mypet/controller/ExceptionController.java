@@ -13,7 +13,8 @@ import org.springframework.web.context.request.WebRequest;
 public class ExceptionController {
     @ExceptionHandler(value = {UsernameIsNotUniqueException.class,
             UserNotFoundException.class, UserAlreadyHasAnOwnerException.class,
-            UserAlreadyHasAPetException.class, PetStatesMementoNotFoundException.class, FriendAlreadyExists.class})
+            UserAlreadyHasAPetException.class, PetStatesMementoNotFoundException.class, FriendAlreadyExists.class,
+            OnlyFriendCanChangeStateException.class, OnlyUserCanChangeStateException.class})
     protected ResponseEntity<Object> handleConflict(
             RuntimeException ex, WebRequest request) {
         String bodyOfResponse = "This should be application specific";

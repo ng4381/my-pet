@@ -16,7 +16,10 @@ public class OwnerMapper implements IDtoMapper<OwnerDTO, OwnerEntity>{
         return new OwnerDTO(
                 entity.getId(),
                 entity.getName(),
-                entity.getName()
+                entity.getName(),
+                entity.getScore().getFriendshipScore(),
+                entity.getScore().getPersonalScore(),
+                entity.getScore().getTotalScore()
         );
     }
 }

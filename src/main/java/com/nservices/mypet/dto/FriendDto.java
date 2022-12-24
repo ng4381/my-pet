@@ -16,6 +16,6 @@ public class FriendDto {
     private Integer friendshipScore;
     private Integer personalScore;
     private Integer totalScore;
-    private List<String> petStates;
+    private List<PetStateInfoDTO> petStates;
 
 }

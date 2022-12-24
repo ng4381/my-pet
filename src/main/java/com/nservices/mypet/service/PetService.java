@@ -5,6 +5,8 @@ import com.nservices.mypet.entity.OwnerEntity;
 import com.nservices.mypet.entity.PetEntity;
 import com.nservices.mypet.entity.PetStateInfoEntity;
 import com.nservices.mypet.entity.PetStatesMementoEntity;
+import com.nservices.mypet.exception.OnlyFriendCanChangeStateException;
+import com.nservices.mypet.exception.OnlyUserCanChangeStateException;
 import com.nservices.mypet.exception.PetNotFoundException;
 import com.nservices.mypet.exception.UserAlreadyHasAPetException;
 import com.nservices.mypet.model.PetState;
@@ -80,14 +82,44 @@ public class PetService {
         return petRepository.findAll();
     }
 
+    /**
+     * Resets user pet state
+     *
+     * @param username
+     * @param state
+     */
     public void resetState(String username, String state) {
         PetEntity pet = getPet(username);
         PetStateInfoEntity petStateInfo = petStateInfoService.getPetStateInfo(pet.getId(), PetState.valueOf(state.toUpperCase()));
+        if(petStateInfo.getFriendOnly() == 1) {
+            throw new OnlyFriendCanChangeStateException("Only friend can change the state " + state);
+        }
+        resetPetStateInfo(petStateInfo);
+        petStateInfoService.savePetStateInfo(petStateInfo);
+    }
+
+    /**
+     * Resets friend pet state
+     *
+     * @param friend_username
+     * @param state
+     */
+    public void resetFriendsState(String friend_username, String state) {
+        PetEntity pet = getPet(friend_username);
+        PetStateInfoEntity petStateInfo = petStateInfoService.getPetStateInfo(pet.getId(), PetState.valueOf(state.toUpperCase()));
+        if(petStateInfo.getFriendOnly() == 0) {
+            throw new OnlyUserCanChangeStateException("Only user(owner) can change the state " + state);
+        }
+        resetPetStateInfo(petStateInfo);
+        petStateInfoService.savePetStateInfo(petStateInfo);
+    }
+
+    private void resetPetStateInfo(PetStateInfoEntity petStateInfo) {
         petStateInfo.setActive(0);
         petStateInfo.setLastModification(LocalDateTime.now());
         petStateInfo.setStart(LocalDateTime.now());
         petStateInfo.setMinutes(0);
+        petStateInfo.setFriendOnly(0);
         petStateInfo.setStart(LocalDateTime.of(0,1,1,0,0));
-        petStateInfoService.savePetStateInfo(petStateInfo);
     }
 }

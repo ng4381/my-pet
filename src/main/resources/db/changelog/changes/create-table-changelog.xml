@@ -129,4 +129,17 @@ http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibas
         <addAutoIncrement tableName="logs" columnName="id" columnDataType="bigint" startWith="1" incrementBy="1"/>
     </changeSet>
 
+    <changeSet id="nik-9" author="Nikita Goloveshko">
+        <addColumn tableName="petstateinfo">
+            <column name="only_friend" type="int"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="nik-10" author="Nikita Goloveshko">
+        <addColumn tableName="owners">
+            <column name="friendship_score" type="int"/>
+            <column name="personal_score" type="int"/>
+            <column name="total_score" type="int"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

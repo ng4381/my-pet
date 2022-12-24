@@ -23,6 +23,7 @@ import static com.nservices.mypet.util.Constants.*;
 @RequiredArgsConstructor
 public class FriendService {
     private final UserService userService;
+    private final PetStateInfoService petStateInfoService;
     private final FriendRepository friendRepository;
     private final FriendMapper friendMapper;
 
@@ -60,7 +61,17 @@ public class FriendService {
                 .map(iFriendDto -> convertToFriendDto(iFriendDto, _iFriendDto -> UNCONFIRMED_FRIEND_REQUEST)
                 );
 
-        return Stream.concat(friendsConfirmedAndWaitingConfirmationDto, friendsUnconfirmedFriendRequestDto).collect(Collectors.toList());
+        List<FriendDto> friendDtoList =  Stream.concat(friendsConfirmedAndWaitingConfirmationDto, friendsUnconfirmedFriendRequestDto).collect(Collectors.toList());
+
+        for (FriendDto friendDto : friendDtoList) {
+            friendDto.setPetStates(
+                    petStateInfoService.getUserPetStateInfo(username).stream()
+                            .filter(petStateInfoDTO -> petStateInfoDTO.getFriendOnly() == 1)
+                            .collect(Collectors.toList())
+            );
+        }
+
+        return friendDtoList;
     }
 
     private FriendDto convertToFriendDto(IFriendDto iFriendDto, Function<IFriendDto, String> operator) {

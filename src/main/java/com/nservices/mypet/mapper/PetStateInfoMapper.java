@@ -17,6 +17,6 @@ public class PetStateInfoMapper implements IDtoMapper<PetStateInfoDTO, PetStateI
     @Override
     public PetStateInfoDTO EntityToObject(PetStateInfoEntity entity) {
         long petAgeInDays = ChronoUnit.DAYS.between(entity.getPet().getBirthDate(), LocalDateTime.now());
-        return new PetStateInfoDTO(entity.getPet().getName(), (int) petAgeInDays, entity.getState().name(), entity.getMinutes());
+        return new PetStateInfoDTO(entity.getPet().getName(), (int) petAgeInDays, entity.getState().name(), entity.getMinutes(), entity.getFriendOnly());
     }
 }
