@@ -1,12 +1,23 @@
 package com.nservices.mypet.controller;
 
 import com.nservices.mypet.dto.FriendDto;
+import com.nservices.mypet.entity.PetEntity;
+import com.nservices.mypet.entity.PetStateInfoEntity;
+import com.nservices.mypet.model.PetState;
+import com.nservices.mypet.repository.PetRepository;
+import com.nservices.mypet.repository.PetStateInfoRepository;
 import com.nservices.mypet.service.FriendService;
+import com.nservices.mypet.service.PetService;
+import com.nservices.mypet.service.PetStateInfoService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -24,8 +35,8 @@ import java.util.List;
 
 import static com.nservices.mypet.util.Constants.*;
 import static com.nservices.mypet.util.TestConstants.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -39,12 +50,24 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 //@AutoConfigureMockMvc
 //@WithMockUser
 @SpringBootTest
-@ExtendWith({RestDocumentationExtension.class, SpringExtension.class})
+@ExtendWith({RestDocumentationExtension.class, SpringExtension.class, MockitoExtension.class})
 public class FriendsControllerTest {
 
 
     //@Autowired
     private MockMvc mockMvc;
+
+    @InjectMocks
+    private PetService petService;
+
+    @MockBean
+    private PetRepository petRepository;
+
+    @InjectMocks
+    private PetStateInfoService petStateInfoService;
+
+    @MockBean
+    private PetStateInfoRepository petStateInfoRepository;
 
     @MockBean
     private FriendService friendsService;
@@ -110,6 +133,23 @@ public class FriendsControllerTest {
                 .andExpect(status().isOk())
                 .andDo(document("shouldDeleteFriend"));;
         verify(friendsService).deleteFriendByUserUsernameFriendUsername(anyString(), anyString());
+    }
+
+    @Test
+    public void shouldResetFriendsState() throws Exception {
+        PetEntity pet = new PetEntity();
+        pet.setId(1L);
+        given(petRepository.findByUsername(anyString())).willReturn(pet);
+
+        PetStateInfoEntity petStateInfo = new PetStateInfoEntity();
+        petStateInfo.setFriendOnly(1);
+        given(petStateInfoRepository.findByPetIdAndState(anyLong(), any())).willReturn(petStateInfo);
+        //given(petStateInfoService.getPetStateInfo(anyLong(), any(PetState.class))).willReturn(new PetStateInfoEntity());
+        mockMvc.perform(MockMvcRequestBuilders.post("/friends/states/reset/{username}/{state}", USER1_NAME, "SICK")
+                .accept(MediaType.APPLICATION_JSON).principal(mockPrincipal))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("shouldResetFriendsState"));
     }
 
 }

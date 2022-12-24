@@ -3,6 +3,7 @@ package com.nservices.mypet.controller;
 import com.nservices.mypet.dto.FriendDto;
 import com.nservices.mypet.service.FriendService;
 import com.nservices.mypet.service.PetService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/friends")
+@Slf4j
 public class FriendsController {
 
     @Autowired
@@ -47,6 +49,7 @@ public class FriendsController {
 
     @PostMapping("/states/reset/{username}/{state}")
     public ResponseEntity<HttpStatus> resetFriendsPetState(@PathVariable("username") String friend_username, @PathVariable("state") String state, Principal principal) {
+        log.info("Principal: " + principal);
         petService.resetFriendsState(friend_username, state);
         return ResponseEntity.ok().build();
     }

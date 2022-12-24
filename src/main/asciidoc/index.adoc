@@ -114,6 +114,7 @@ PERSONAL_SCORE increments when you change a state of your pet
 
 == Pet states module
 
+=== General logic
 The pet can have four states:
 
 . BORED
@@ -123,3 +124,77 @@ The pet can have four states:
 
 Each state can be changed by user or by a friend.
 Program randomly chooses which state can be changed by the user or by a friend.
+
+=== Classes/Table description
+
+There are several classes responsible for a logic of changing the states. They stored in the package com/nservices/mypet/operations.
+This classes runs by the framework "Quartz".
+
+Information about states stores in the table "petstateinfo" (PetStateInfoEntity.class)
+
+|===
+|id|pet_id|state|last_modification|start|minutes|active|only_friend
+|2|1|SICK|2022-12-23 22:2228|2022-12-10 12:25:43|19316|1|0
+|2|2|BORED|2022-12-23 22:2228|2022-12-10 12:22:43|19319|1|0
+|===
+
+=== Activating/Resetting the state
+
+Activating the states happens automatically by "Quartz" framework.
+Framework triggers execution() method of each operation (state)
+
+
+==== Activating
+
+Each state (operation) has its own static variable. For instance, state Bored (BoredModifyOperation.class) has a variable BORED_TIME_MINUTES.
+This variable shows how much time should pass after last modification (active=0) before switching the state on.
+
+If (active == 0 AND start - current_time >= BORED_TIME_MINUTES) then
+
+. make it active
+. set ACTIVE == 1
+. set STAR_TIME and LAST_MODIFICATION_TIME == current_time
+. set MINUTES == 0
+. set FRIEND_ONLY == 0 or 1 (randomly)
+
+NOTE: We always update existing record. When we create a new pet we create record for each state.
+
+
+==== Prolonging the state
+
+If state is activated program prolongs it state by
+
+. changing LAST_MODIFICATION_TIME == current_time
+. changing MINUTES == (START_TIME - current_time)
+
+==== Resetting the state
+
+NOTE: Resetting the state happens in the class PetService.class
+
+When user sends a POST request program resets the record for this state.
+
+. sets ACTIVE == 0
+. sets STAR_TIME and LAST_MODIFICATION_TIME == current_time
+. sets MINUTES == 0
+. sets FRIEND_ONLY == 0
+
+There are two ways to reset the state
+
+. user resetting his own state
+. user resetting his friends state
+
+
+Resetting friends pet state
+
+.request
+include::{snippets}/shouldResetFriendsState/http-request.adoc[]
+.response
+include::{snippets}/shouldResetFriendsState/http-response.adoc[]
+
+
+Resetting your pet state
+
+.request
+include::{snippets}/shouldResetUsersState/http-request.adoc[]
+.response
+include::{snippets}/shouldResetUsersState/http-response.adoc[]
