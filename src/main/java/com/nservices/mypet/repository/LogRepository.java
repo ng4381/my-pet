@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public interface LogRepository extends JpaRepository<LogEntity, Long> {
 
-    @Query(value = "SELECT l.message FROM LogEntity l LEFT JOIN OwnerEntity o ON l.owner.id = o.id LEFT JOIN User u ON u.id = o.user.id WHERE u.username = :username")
+    @Query(value = "SELECT l.message as message FROM LogEntity l LEFT JOIN OwnerEntity o ON l.owner.id = o.id LEFT JOIN User u ON u.id = o.user.id WHERE u.username = :username ORDER BY l.id DESC")
     List<ILogDto> findAllLogsByUsername(String username);
 
 }

@@ -13,6 +13,7 @@ import java.security.Principal;
 
 @RestController
 @RequestMapping("/owners")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequiredArgsConstructor
 public class OwnerController {
     private final OwnerService ownerService;

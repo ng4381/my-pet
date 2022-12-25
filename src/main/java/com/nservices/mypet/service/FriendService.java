@@ -27,6 +27,8 @@ public class FriendService {
     private final FriendRepository friendRepository;
     private final FriendMapper friendMapper;
 
+    private final PetLogService petLogService;
+
     public void addUnconfirmedFriend(String friend_username, String username) {
         User friend_user = userService.getUserByUsername(friend_username);
         User user = userService.getUserByUsername(username);
@@ -35,6 +37,8 @@ public class FriendService {
         }
         FriendEntity friend = new FriendEntity(user, friend_user, 0);
         friendRepository.save(friend);
+        petLogService.saveLog(username, "[Friends] Friend request to " + friend_username);
+        petLogService.saveLog(friend_username, "[Friends] Friend request from " + username);
     }
 
     public FriendEntity getFriendByUserAndFriend(String username, String friend_username) {
@@ -65,7 +69,7 @@ public class FriendService {
 
         for (FriendDto friendDto : friendDtoList) {
             friendDto.setPetStates(
-                    petStateInfoService.getUserPetStateInfo(username).stream()
+                    petStateInfoService.getUserPetStateInfo(friendDto.getFriendUsername()).stream()
                             .filter(petStateInfoDTO -> petStateInfoDTO.getFriendOnly() == 1)
                             .collect(Collectors.toList())
             );
@@ -90,12 +94,16 @@ public class FriendService {
         User user_friend = userService.getUserByUsername(friend_username);
 
         // Add current user to a list of friends of the friend
-        FriendEntity recordForFriend = new FriendEntity(user_friend, user, 1);
+        FriendEntity recordForFriend = new FriendEntity(user, user_friend, 1);
 
         // Update user record for this friend. Set status to confirmed = 1
-        FriendEntity recordForUser = getFriendByUserAndFriend(username, friend_username);
+        FriendEntity recordForUser = getFriendByUserAndFriend(friend_username, username);
+        recordForUser.setConfirmed(1);
 
         friendRepository.saveAll(List.of(recordForFriend, recordForUser));
+
+        petLogService.saveLog(username, "[Friends] Friend confirmed/accepted " + friend_username);
+        petLogService.saveLog(friend_username, "[Friends] " + username + " confirmed/accepted your request");
     }
 
     public void deleteFriendByUserUsernameFriendUsername(String username, String friend_username) {

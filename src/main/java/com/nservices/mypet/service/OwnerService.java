@@ -2,6 +2,7 @@ package com.nservices.mypet.service;
 
 import com.nservices.mypet.dto.OwnerDTO;
 import com.nservices.mypet.entity.OwnerEntity;
+import com.nservices.mypet.entity.Score;
 import com.nservices.mypet.entity.User;
 import com.nservices.mypet.exception.UserAlreadyHasAnOwnerException;
 import com.nservices.mypet.repository.OwnerRepository;
@@ -21,6 +22,7 @@ public class OwnerService {
         }
         User user = userService.getUserByUsername(username);
         OwnerEntity owner = new OwnerEntity(ownerDTO.getName(), ownerDTO.getEmail(), user);
+        owner.setScore(new Score(0,0,0));
         return ownerRepository.save(owner);
     }
 

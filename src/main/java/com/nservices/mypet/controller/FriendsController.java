@@ -13,6 +13,7 @@ import java.security.Principal;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("/friends")
 @Slf4j
 public class FriendsController {
@@ -50,7 +51,7 @@ public class FriendsController {
     @PostMapping("/states/reset/{username}/{state}")
     public ResponseEntity<HttpStatus> resetFriendsPetState(@PathVariable("username") String friend_username, @PathVariable("state") String state, Principal principal) {
         log.info("Principal: " + principal);
-        petService.resetFriendsState(friend_username, state);
+        petService.resetFriendsState(principal.getName(), friend_username, state);
         return ResponseEntity.ok().build();
     }
 

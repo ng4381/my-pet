@@ -43,12 +43,20 @@ public class LogServiceTest {
     }
 
     @Test
+    public void shouldGenerateAndSavePetStateLog() {
+        given(ownerService.getOwner(anyString())).willReturn(new OwnerEntity());
+        petLogService.generateAndSavePetStateLog(USER1_NAME, 1, "BORED", List.of("Msg_1", "Msg_2, Msg_3"));
+        Mockito.verify(logRepository).save(any());
+    }
+
+    @Test
     public void shouldReturnAllLogs() {
         given(logRepository.findAllLogsByUsername(anyString())).willReturn(List.of(
                 new LogDto("message_1"),
                 new LogDto("message_2")
         ));
         List<ILogDto> logDtoList = petLogService.getAllLogsByUsername(USER1_NAME);
-        Assertions.assertThat(logDtoList).hasSize(2);
+        logDtoList.forEach(iLogDto -> System.out.println(iLogDto.getMessage()));
+        Assertions.assertThat(logDtoList).filteredOn("message", "message_1").hasSize(1);
     }
 }

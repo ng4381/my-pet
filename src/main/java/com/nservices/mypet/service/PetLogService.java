@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -21,7 +22,17 @@ public class PetLogService {
         return logRepository.save(new LogEntity(owner, message));
     }
 
+    public LogEntity generateAndSavePetStateLog(String username, int friendOnly, String state, List<String> possibleMessages) {
+        if (friendOnly == 0) {
+            return saveLog(username, "[PetState] Your pet became " + state);
+        }
+        int maxIdx = possibleMessages.size()-1;
+        int rndPosition = (int)(Math.random() * maxIdx);
+        return saveLog(username, possibleMessages.get(rndPosition));
+    }
+
     public List<ILogDto> getAllLogsByUsername(String username) {
-        return logRepository.findAllLogsByUsername(username);
+        return logRepository.findAllLogsByUsername(username).stream()
+                .map(iLogDto -> new LogDto(iLogDto.getMessage())).limit(20).collect(Collectors.toList());
     }
 }

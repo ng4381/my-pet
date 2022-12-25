@@ -28,6 +28,10 @@ public class PetService {
     private final PetStatesMementoService petStatesMementoService;
     private final PetStateInfoService petStateInfoService;
 
+    private final PetLogService petLogService;
+
+    private final ScoreService scoreService;
+
     @Transactional
     public void savePet(PetDTO petDTO, String username) {
 
@@ -96,6 +100,9 @@ public class PetService {
         }
         resetPetStateInfo(petStateInfo);
         petStateInfoService.savePetStateInfo(petStateInfo);
+        int score = 100;
+        scoreService.incrementPersonalScore(score, username);
+        petLogService.saveLog(username, "[PetState] You have changed your pet state (" + state + ") [Score] (+" + score + ")");
     }
 
     /**
@@ -104,7 +111,7 @@ public class PetService {
      * @param friend_username
      * @param state
      */
-    public void resetFriendsState(String friend_username, String state) {
+    public void resetFriendsState(String username, String friend_username, String state) {
         PetEntity pet = getPet(friend_username);
         PetStateInfoEntity petStateInfo = petStateInfoService.getPetStateInfo(pet.getId(), PetState.valueOf(state.toUpperCase()));
         if(petStateInfo.getFriendOnly() == 0) {
@@ -112,6 +119,10 @@ public class PetService {
         }
         resetPetStateInfo(petStateInfo);
         petStateInfoService.savePetStateInfo(petStateInfo);
+        int score = 150;
+        scoreService.incrementFriendshipScore(score, username);
+        petLogService.saveLog(friend_username, "[PetState] " + username + " has changed your pet state (" + state + ")");
+        petLogService.saveLog(username, "[PetState] You have changed " + friend_username + "'s pet state (" + state + ") [Score] (+" + score + ")");
     }
 
     private void resetPetStateInfo(PetStateInfoEntity petStateInfo) {

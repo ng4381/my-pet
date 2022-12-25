@@ -77,7 +77,7 @@ class PetServiceTest {
     @Test
     public void shouldResetFriendPedState() {
         PetStateInfoEntity petStateInfo = preResetMock(1);
-        petService.resetFriendsState(USER1_NAME, "DIRTY");
+        petService.resetFriendsState("", USER1_NAME, "DIRTY");
         Assertions.assertThat(petStateInfo)
                 .hasFieldOrPropertyWithValue("active", 0)
                 .hasFieldOrPropertyWithValue("minutes", 0L);
@@ -90,6 +90,6 @@ class PetServiceTest {
         petStateInfo.setFriendOnly(0);
         given(petStateInfoService.getPetStateInfo(any(), any())).willReturn(petStateInfo);
 
-        Assertions.assertThatThrownBy(() -> petService.resetFriendsState(USER1_NAME, "DIRTY"));
+        Assertions.assertThatThrownBy(() -> petService.resetFriendsState("", USER1_NAME, "DIRTY"));
     }
 }

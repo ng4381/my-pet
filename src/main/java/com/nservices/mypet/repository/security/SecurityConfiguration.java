@@ -34,6 +34,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/registry").permitAll()
                 .antMatchers("/owners").authenticated()
                 .antMatchers("/pets/**").authenticated()
+                .antMatchers("/friends/**").authenticated()
+                .antMatchers("/logs/**").authenticated()
                 .antMatchers(HttpMethod.POST,"/pets/states/reset/**").authenticated()
                 .and().cors().and().httpBasic();
 
