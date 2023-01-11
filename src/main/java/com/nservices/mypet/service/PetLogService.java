@@ -6,8 +6,11 @@ import com.nservices.mypet.entity.LogEntity;
 import com.nservices.mypet.entity.OwnerEntity;
 import com.nservices.mypet.repository.LogRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,7 +22,7 @@ public class PetLogService {
 
     public LogEntity saveLog(String username, String message) {
         OwnerEntity owner = ownerService.getOwner(username);
-        return logRepository.save(new LogEntity(owner, message));
+        return logRepository.save(new LogEntity(owner, message, LocalDateTime.now()));
     }
 
     public LogEntity generateAndSavePetStateLog(String username, int friendOnly, String state, List<String> possibleMessages) {
@@ -32,7 +35,10 @@ public class PetLogService {
     }
 
     public List<ILogDto> getAllLogsByUsername(String username) {
-        return logRepository.findAllLogsByUsername(username).stream()
-                .map(iLogDto -> new LogDto(iLogDto.getMessage())).limit(20).collect(Collectors.toList());
+//        return logRepository.findAllLogsByUsername(username).stream()
+//                .map(iLogDto -> new LogDto(iLogDto.getMessage())).limit(20).collect(Collectors.toList());
+
+        return logRepository.findAllLogsByUsername(username, PageRequest.of(0, 20)).stream()
+                .map(iLogDto -> new LogDto(iLogDto.getMessage(), iLogDto.getDateTime())).collect(Collectors.toList());
     }
 }

@@ -14,6 +14,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.nservices.mypet.util.TestConstants.USER1_NAME;
@@ -51,9 +52,9 @@ public class LogServiceTest {
 
     @Test
     public void shouldReturnAllLogs() {
-        given(logRepository.findAllLogsByUsername(anyString())).willReturn(List.of(
-                new LogDto("message_1"),
-                new LogDto("message_2")
+        given(logRepository.findAllLogsByUsername(anyString(), any())).willReturn(List.of(
+                new LogDto("message_1", LocalDateTime.now()),
+                new LogDto("message_2", LocalDateTime.now())
         ));
         List<ILogDto> logDtoList = petLogService.getAllLogsByUsername(USER1_NAME);
         logDtoList.forEach(iLogDto -> System.out.println(iLogDto.getMessage()));

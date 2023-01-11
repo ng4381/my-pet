@@ -9,7 +9,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.nservices.mypet.repository.security.RoleConstants.ROLE_USER;
@@ -33,9 +36,9 @@ class LogRepositoryTest {
         userRepository.save(user);
         OwnerEntity owner = new OwnerEntity(USER1_NAME, EMAIL1, user);
         ownerRepository.save(owner);
-        LogEntity logEntity1 = new LogEntity(owner, "test message");
+        LogEntity logEntity1 = new LogEntity(owner, "test message", LocalDateTime.now());
         logRepository.save(logEntity1);
-        LogEntity logEntity2 = new LogEntity(owner, "test message");
+        LogEntity logEntity2 = new LogEntity(owner, "test message", LocalDateTime.now());
         logRepository.save(logEntity2);
     }
 
@@ -47,7 +50,7 @@ class LogRepositoryTest {
     @Test
     public void shouldReturnAllLogsByUsername() {
 
-        List<ILogDto> logs = logRepository.findAllLogsByUsername(USER1_NAME);
+        List<ILogDto> logs = logRepository.findAllLogsByUsername(USER1_NAME, PageRequest.of(0,2));
         Assertions.assertThat(logs).hasSize(2);
     }
 }

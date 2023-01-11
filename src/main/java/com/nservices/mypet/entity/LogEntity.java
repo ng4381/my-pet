@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -21,14 +22,19 @@ public class LogEntity {
     @JoinColumn(name = "owner_id")
     private OwnerEntity owner;
 
+    @Column(name = "message")
     private String message;
+
+    @Column(name = "date_time")
+    private LocalDateTime dateTime;
 
     public OwnerEntity getOwner() {
         return owner;
     }
 
-    public LogEntity(OwnerEntity owner, String message) {
+    public LogEntity(OwnerEntity owner, String message, LocalDateTime dateTime) {
         this.owner = owner;
         this.message = message;
+        this.dateTime = dateTime;
     }
 }

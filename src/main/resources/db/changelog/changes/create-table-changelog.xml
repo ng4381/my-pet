@@ -142,4 +142,9 @@ http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibas
             <column name="total_score" type="int"/>
         </addColumn>
     </changeSet>
+    <changeSet id="nik-11" author="Nikita Goloveshko">
+        <addColumn tableName="logs">
+            <column name="date_time" type="datetime" defaultValueDate="2023-01-01T00:00:00"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>
