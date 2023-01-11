@@ -3,7 +3,8 @@ spring:
     url: jdbc:postgresql://db:5432/sample
     username: sample
     password: sample
-
+  quartz:
+    job-store-type: memory
 
 myvar:
   profilename: NIK_PROD

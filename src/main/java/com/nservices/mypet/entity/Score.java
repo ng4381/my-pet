@@ -15,13 +15,13 @@ import javax.persistence.Embeddable;
 @AllArgsConstructor
 public class Score {
     @Column(name = "friendship_score")
-    private int friendshipScore;
+    private Integer friendshipScore;
 
     @Column(name = "personal_score")
-    private int personalScore;
+    private Integer personalScore;
 
     @Column(name = "total_score")
-    private int totalScore;
+    private Integer totalScore;
 
     public void updateTotalScore() {
         totalScore = friendshipScore + personalScore;
